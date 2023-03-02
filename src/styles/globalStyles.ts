@@ -7,6 +7,11 @@ const GlobalStyle = createGlobalStyle`
         background: teal;
         font-family: Open-Sans, Helvetica, Sans-Serif;
     }
+
+    #root {
+        display: flex;
+        flex-direction: row ;
+    }
 `
 
 export default GlobalStyle
