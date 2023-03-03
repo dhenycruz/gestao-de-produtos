@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const Aside = styled.aside`
   width: 250px;
   height: 100vh;
-  background-color: #343838;
+  background-color: #005F6B;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,10 +29,10 @@ export const Diviser = styled.div`
   margin-top: 23px;
 `
 export const Button = styled.button`
-  width: 240px;
+  width: 93%;
   height: 35px;
   border-radius: 5px;
-  background-color: #585858;
+  background-color: #008C9E;
   border: none;
   margin-bottom: 11px;
   padding-left: 31px;
@@ -47,6 +47,6 @@ export const Button = styled.button`
   letter-spacing: 0.195em;
 
   &:hover {
-    background-color: #515151;
+    background-color: #00B4CC;
   }
 `
