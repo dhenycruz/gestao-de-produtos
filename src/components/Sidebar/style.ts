@@ -29,11 +29,11 @@ export const Diviser = styled.div`
   background-color: #454545;
   margin-top: 23px;
 `
-export const Button = styled.button`
+export const Button = styled.button<{ bg: string }>`
   width: 93%;
   height: 35px;
   border-radius: 5px;
-  background-color: #008C9E;
+  background-color: ${({ bg }) => bg};
   border: none;
   margin-bottom: 11px;
   padding-left: 31px;
