@@ -5,9 +5,10 @@ export const HeadarApp = styled.header`
   height: 70px;
   background-color: #fff;
   display: flex;
-  justify-content: end;
   align-items: center;
+  justify-content: end;
   border-bottom: solid 1px #343838;
+  padding-right: 52px;
 
   h3 {
     color: #343838;
@@ -16,10 +17,6 @@ export const HeadarApp = styled.header`
     font-size: 12px;
     line-height: 15px;
     letter-spacing: 0.195em;
-    margin-right: 20px;
-  }
-
-  img {
-    margin-right: 52px;
+    margin-right: 15px;
   }
 `

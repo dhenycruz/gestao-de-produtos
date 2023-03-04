@@ -1,6 +1,7 @@
 import React from 'react'
 import perfil from '../../images/perfil.png'
 import { HeadarApp } from './style'
+
 const Header: React.FC = () => {
   return (
     <HeadarApp>

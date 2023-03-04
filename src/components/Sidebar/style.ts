@@ -8,6 +8,7 @@ export const Aside = styled.aside`
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
+  position: fixed;
 
   span {
     width: 100%;
