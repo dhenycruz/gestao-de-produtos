@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../Header'
 import Sidebar from '../Sidebar'
 import iconAddProduct from '../../images/package-add-icon.png'
@@ -8,8 +8,18 @@ import iconCategorie from '../../images/category-icon.png'
 import Footer from '../footer'
 import Table from '../TableProduct'
 import { Main, Section, ButtonAdd, CardTotal, Cardbody, ValueTotal } from './style'
+import ModalAddProduct from '../Modals/ModalAddProduct'
+import ModalAddCategorie from '../Modals/ModalAddCategorie'
 
 const Products: React.FC = () => {
+  // Open modal add Product
+  const [isOpenProduct, setIsOpenProduct] = useState(false)
+  const openModalProduct = (): void => { setIsOpenProduct(!isOpenProduct) }
+
+  // Open modal add Categorie
+  const [isOpenCategorie, setIsOpenCategorie] = useState(false)
+  const openModalCategorie = (): void => { setIsOpenCategorie(!isOpenCategorie) }
+
   return (
     <>
       <Sidebar />
@@ -18,11 +28,18 @@ const Products: React.FC = () => {
         <Section>
           <h2>Produtos</h2>
           <div>
-            <ButtonAdd bg='#fff' color='#343838'>
+            <ButtonAdd
+              bg='#fff' color='#343838'
+              onClick={openModalProduct}
+            >
               <img src={iconAddProduct} alt='icon add product' />
               ADICIONAR PRODUTO
             </ButtonAdd>
-            <ButtonAdd bg='#343838' color='#fff'>
+            <ButtonAdd
+              bg='#343838'
+              color='#fff'
+              onClick={openModalCategorie}
+            >
               <img src={iconAddCategorie} alt='icon add categorie' />
               ADICIONAR GATEGORIA
             </ButtonAdd>
@@ -47,6 +64,9 @@ const Products: React.FC = () => {
         <Table />
       <Footer />
       </Main>
+      { /* Modals */ }
+      <ModalAddProduct isOpen={isOpenProduct} toggle={openModalProduct} />
+      <ModalAddCategorie isOpen={isOpenCategorie} toggle={openModalCategorie} />
     </>
   )
 }
