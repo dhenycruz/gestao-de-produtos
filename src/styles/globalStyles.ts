@@ -4,8 +4,13 @@ const GlobalStyle = createGlobalStyle`
     body {
         margin: 0;
         padding: 0;
-        background: teal;
+        background: #F9F9F9;
         font-family: Open-Sans, Helvetica, Sans-Serif;
+    }
+
+    #root {
+        display: flex;
+        flex-direction: row ;
     }
 `
 
