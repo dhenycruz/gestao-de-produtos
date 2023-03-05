@@ -24,7 +24,7 @@ const Sidebar: React.FC = () => {
         Produtos
       </Button>
       <Button
-        bg='#008C9E'
+        bg={ location === '/categorias' ? '#02c4dd' : '#008C9E'}
         onClick={() => { redirect('/categorias') }}
       >
         Categorias

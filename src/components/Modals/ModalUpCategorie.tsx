@@ -12,7 +12,7 @@ interface Props {
 const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle }) => {
   return (
     <Modal isOpen={isOpen} toggle={toggle} centered={true}>
-      <ModalHeader toggle={toggle}>Adicionar Categoria</ModalHeader>
+      <ModalHeader toggle={toggle}>Editar Categoria</ModalHeader>
       <ModalBody>
       <Form>
           <Row>
