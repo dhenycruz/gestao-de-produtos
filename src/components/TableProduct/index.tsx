@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Button, Table, UncontrolledAlert } from 'reactstrap'
+import { Button, Table, Alert } from 'reactstrap'
 import ModalUpProduct from '../Modals/ModalUpProduct'
 import ModalDelProduct from '../Modals/ModalDelProduct'
 import { Div } from './style'
@@ -46,9 +46,9 @@ const TableProduct: React.FC = () => {
 
   return (
     <Div>
-      <UncontrolledAlert color={alertColor} isOpen={alertOpen}>
+      <Alert color={alertColor} isOpen={alertOpen} closeAriaLabel='Close'>
           {alertText}
-      </UncontrolledAlert>
+      </Alert>
       <Table
         hover
         responsive

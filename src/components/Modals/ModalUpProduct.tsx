@@ -50,12 +50,18 @@ const ModalUpProduct: React.FC<Props> = ({ isOpen, toggle, product }) => {
         setAlertColor('danger')
         setAlertOpen(true)
         setAlertText('Ops, algo deu errado.')
+        toggle()
       })
       .then((_res) => {
         setAlertColor('success')
         setAlertOpen(true)
         setAlertText('Produto foi adicionado com sucesso!')
+        toggle()
       })
+
+    setTimeout(
+      () => { setAlertOpen(false) }, 3000
+    )
   })
 
   return (

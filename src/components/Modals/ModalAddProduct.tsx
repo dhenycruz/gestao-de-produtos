@@ -43,17 +43,25 @@ const ModalAddProduct: React.FC<Props> = ({ isOpen, toggle }) => {
     data.isAvailable = isAvailable
     data.isWarehouse = isWarehouse
 
-    void api.post('/Products', data)
-      .catch((_error) => {
+    void api.post('/Product', data)
+      .catch((error) => {
+        console.log(error)
         setAlertColor('danger')
         setAlertOpen(true)
         setAlertText('Ops, algo deu errado.')
+        toggle()
       })
-      .then((_res) => {
+      .then((res) => {
+        console.log(res)
         setAlertColor('success')
         setAlertOpen(true)
         setAlertText('Produto foi adicionado com sucesso!')
+        toggle()
       })
+
+    setTimeout(
+      () => { setAlertOpen(false) }, 6000
+    )
   })
 
   return (

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Div } from './style'
-import { Button, Table, UncontrolledAlert } from 'reactstrap'
+import { Button, Table, Alert } from 'reactstrap'
 import ModalUpCategorie from '../Modals/ModalUpCategorie'
 import ModalDelCategorie from '../Modals/ModalDelCategorie'
 import { GlobalConext } from '../../context/globalContext'
@@ -43,9 +43,9 @@ const TableCategory: React.FC = () => {
 
   return (
     <Div>
-      <UncontrolledAlert color={alertColor} isOpen={alertOpen}>
+      <Alert color={alertColor} isOpen={alertOpen} closeAriaLabel='Close'>
           {alertText}
-      </UncontrolledAlert>
+      </Alert>
       <Table
         hover
         responsive

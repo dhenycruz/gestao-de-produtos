@@ -71,12 +71,18 @@ const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
         setAlertColor('danger')
         setAlertOpen(true)
         setAlertText('Ops, algo deu errado.')
+        toggle()
       })
       .then((_res) => {
         setAlertColor('success')
         setAlertOpen(true)
         setAlertText('Categoria foi adicionada com sucesso!')
+        toggle()
       })
+
+    setTimeout(
+      () => { setAlertOpen(false) }, 3000
+    )
   })
 
   return (

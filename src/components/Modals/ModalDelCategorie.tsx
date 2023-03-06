@@ -19,12 +19,18 @@ const ModalDelCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
         setAlertColor('danger')
         setAlertOpen(true)
         setAlertText('Ops, algo deu errado.')
+        toggle()
       })
       .then((_res) => {
         setAlertColor('success')
         setAlertOpen(true)
         setAlertText('Categoria foi deletada com sucesso!')
+        toggle()
       })
+
+    setTimeout(
+      () => { setAlertOpen(false) }, 3000
+    )
   }
 
   return (
