@@ -1,106 +1,35 @@
-import React, { useState } from 'react'
-import DataTable from 'react-data-table-component'
+import React, { useContext, useState } from 'react'
 import { Div } from './style'
-import { customStyles } from './DataTable/style'
-import { Button } from 'reactstrap'
-import { paginationComponentOptions } from './DataTable/paginationComponentOptions'
+import { Button, Table, UncontrolledAlert } from 'reactstrap'
 import ModalUpCategorie from '../Modals/ModalUpCategorie'
 import ModalDelCategorie from '../Modals/ModalDelCategorie'
+import { GlobalConext } from '../../context/globalContext'
+import { type ICategory } from '../../interfaces/interfaces'
 
-const data = [
-  {
-    id: 1,
-    title: 'Beetlejuice',
-    year: '1988'
-  },
-  {
-    id: 2,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 3,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 4,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 5,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 6,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 7,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 8,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 9,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 10,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 11,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 12,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 13,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 14,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 15,
-    title: 'Ghostbusters',
-    year: '1984'
-  },
-  {
-    id: 16,
-    title: 'Ghostbusters',
-    year: '1984'
-  }
-]
-
-const Table: React.FC = () => {
+const TableCategory: React.FC = () => {
+  const { categoryData, alertOpen, alertColor, alertText } = useContext(GlobalConext)
   const [isOpenUpCategorie, setIsOpenUpCategorie] = useState(false)
   const [isOpenDelCategorie, setIsOpenDelCategorie] = useState(false)
+  const [categorySelected, setCategorySelected] = useState({
+    id: 0,
+    allowAttachments: false,
+    allowQuantityVariation: false,
+    description: '',
+    hasShipping: false,
+    limitRequest: 0,
+    limitRequestsPerMonth: false,
+    name: '',
+    validateClient: false,
+    valueVariation: 0,
+    allowValueVariation: false
+  })
 
-  const openModalUpCategorie = (id: number): void => {
-    console.log(id)
+  const openModalUpCategorie = (category: ICategory): void => {
     setIsOpenUpCategorie(!isOpenUpCategorie)
   }
 
-  const openModalDeleteCategorie = (id: number): void => {
-    console.log(id)
+  const openModalDeleteCategorie = (category: ICategory): void => {
+    setCategorySelected(categorySelected)
     setIsOpenDelCategorie(!isOpenDelCategorie)
   }
 
@@ -112,77 +41,70 @@ const Table: React.FC = () => {
     setIsOpenDelCategorie(!isOpenDelCategorie)
   }
 
-  const columns = [
-    {
-      name: '#id',
-      style: {
-        fontWeight: 700,
-        color: 'rgba(0,0,0,.54)'
-      },
-      selector: (row: { id: number }) => row.id
-    },
-    {
-      name: 'Categoria',
-      selector: (row: { title: string }) => row.title,
-      sortable: true
-    },
-    {
-      name: 'Descrição',
-      selector: (row: { year: string }) => row.year,
-      sortable: true
-    },
-    {
-      cell: (row: any) => {
-        return (
-          <Button
-            color='primary'
-            size='sm'
-            onClick={ () => { openModalUpCategorie(row) }}
-          >
-            Editar
-          </Button>
-        )
-      },
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true
-    },
-    {
-      cell: (row: any) => {
-        return (
-          <Button
-            color='danger'
-            size='sm'
-            onClick={ () => { openModalDeleteCategorie(row) }}
-
-          >
-            Excluir
-          </Button>
-        )
-      },
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true
-    }
-  ]
-
   return (
     <Div>
-      <div>
-        <DataTable
-          title='Lista de Categorias'
-          columns={columns}
-          data={data}
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          customStyles={customStyles}
-          responsive={true}
-        />
-      </div>
+      <UncontrolledAlert color={alertColor} isOpen={alertOpen}>
+          {alertText}
+      </UncontrolledAlert>
+      <Table
+        hover
+        responsive
+        size=""
+      >
+        <thead>
+          <tr>
+            <th>
+              #id
+            </th>
+            <th>
+              Categoria
+            </th>
+            <th>
+              Descrição
+            </th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          { categoryData.map((category, index) => (
+            <tr key={index}>
+            <th scope="row">
+              {category.id}
+            </th>
+            <td>
+              {category.name}
+            </td>
+            <td>
+              {category.description === null ? 'Nenhuma descrição para essa categoria' : category.description}
+            </td>
+            <td>
+              <Button
+                color='primary'
+                size='sm'
+                onClick={ () => { openModalUpCategorie(category) }}
+              >
+                Editar
+              </Button>
+            </td>
+            <td>
+              <Button
+                color='danger'
+                size='sm'
+                onClick={ () => { openModalDeleteCategorie(category) }}
+              >
+                Excluir
+              </Button>
+            </td>
+          </tr>
+          ))}
+
+        </tbody>
+      </Table>
       <ModalUpCategorie isOpen={isOpenUpCategorie} toggle={closeModalUpCategorie} />
-      <ModalDelCategorie isOpen={isOpenDelCategorie} toggle={closeModalDeleteCategorie} />
+      <ModalDelCategorie isOpen={isOpenDelCategorie} toggle={closeModalDeleteCategorie} category={categorySelected} />
     </Div>
   )
 }
 
-export default Table
+export default TableCategory

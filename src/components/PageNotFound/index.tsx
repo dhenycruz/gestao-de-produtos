@@ -38,7 +38,7 @@ const PageNotFound: React.FC = () => {
     <Page>
       <Box>
         <img src={logo} alt='logo da aplicação' />
-        <h1>Desculpa, página não encontrada.</h1>
+        <h1>Desculpe, página não encontrada.</h1>
       </Box>
     </Page>
   )

@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
-import Header from '../Header'
 import Sidebar from '../Sidebar'
+import Header from '../Header'
+import Footer from '../footer'
+import ModalAddCategorie from '../Modals/ModalAddCategorie'
+import ModalAddProduct from '../Modals/ModalAddProduct'
+import ButtonAddCategorie from '../ButtonAddCategorie'
+import ButtonAddProduct from '../ButtonAddProduct'
+import TableCategories from '../TableCategories'
+import { Main, Section, CardTotal, Cardbody, ValueTotal } from './style'
 import iconProduct from '../../images/icon-product.png'
 import iconCategorie from '../../images/category-icon.png'
-import Footer from '../footer'
-import TableProduct from '../TableProduct'
-import { Main, Section, CardTotal, Cardbody, ValueTotal } from './style'
-import ModalAddProduct from '../Modals/ModalAddProduct'
-import ModalAddCategorie from '../Modals/ModalAddCategorie'
-import ButtonAddProduct from '../ButtonAddProduct'
-import ButtonAddCategorie from '../ButtonAddCategorie'
 
-const Products: React.FC = () => {
+const Categoires: React.FC = () => {
   // Open modal add Product
   const [isOpenProduct, setIsOpenProduct] = useState(false)
   const openModalProduct = (): void => { setIsOpenProduct(!isOpenProduct) }
@@ -26,20 +26,13 @@ const Products: React.FC = () => {
       <Main>
         <Header />
         <Section>
-          <h2>Produtos</h2>
+          <h1>Categorias</h1>
           <div>
-            <ButtonAddProduct openModalProduct={openModalProduct}/>
             <ButtonAddCategorie openModalCategorie={openModalCategorie} />
+            <ButtonAddProduct openModalProduct={openModalProduct} />
           </div>
         </Section>
         <CardTotal>
-          <Cardbody bg='#529766'>
-            <img src={iconProduct} alt='icon product' />
-            <ValueTotal>
-              Produtos
-              <span>15</span>
-            </ValueTotal>
-          </Cardbody>
           <Cardbody bg='#FF9811'>
             <img src={iconCategorie} alt='icon categorie' />
             <ValueTotal>
@@ -47,9 +40,16 @@ const Products: React.FC = () => {
               <span>4</span>
             </ValueTotal>
           </Cardbody>
+          <Cardbody bg='#529766'>
+            <img src={iconProduct} alt='icon product' />
+            <ValueTotal>
+              Produtos
+              <span>15</span>
+            </ValueTotal>
+          </Cardbody>
         </CardTotal>
-        <TableProduct />
-      <Footer />
+        <TableCategories />
+        <Footer />
       </Main>
       { /* Modals */ }
       <ModalAddProduct isOpen={isOpenProduct} toggle={openModalProduct} />
@@ -58,4 +58,4 @@ const Products: React.FC = () => {
   )
 }
 
-export default Products
+export default Categoires
