@@ -4,6 +4,7 @@ export const Main = styled.main`
   width: 100%;
   margin-left: 250px;
 `
+
 export const Section = styled.section`
   width: 100%;
   height: 90px;
@@ -12,7 +13,7 @@ export const Section = styled.section`
   align-items: center;
   padding: 0 52px 0 52px;
 
-  h2 {
+  h1 {
     font-style: normal;
     font-weight: 700;
     font-size: 20px;
@@ -21,25 +22,6 @@ export const Section = styled.section`
   }
 `
 
-export const ButtonAdd = styled.button<{ bg: string, color: string }>`
-  width: 247px;
-  height: 44.72px;
-  color: ${({ color }) => color};
-  background-color: ${({ bg }) => bg};
-  border-radius: 5px;
-  border: solid 1px #343838;
-  margin-left: 20px;
-
-  font-style: normal;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 15px;
-  letter-spacing: 0.195em;
-
-  img {
-    margin-right: 8px;
-  }
-`
 export const CardTotal = styled.div`
   width: 100%;
   display: flex;

@@ -5,17 +5,18 @@ import reportWebVitals from './reportWebVitals'
 import GlobalStyle from './styles/globalStyles'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter } from 'react-router-dom'
+import { GlobalProvider } from './context/globalContext'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 )
 root.render(
-  <React.StrictMode>
     <BrowserRouter>
       <GlobalStyle />
-      <App />
+        <GlobalProvider>
+          <App />
+        </GlobalProvider>
     </BrowserRouter>
-  </React.StrictMode>
 )
 
 // If you want to start measuring performance in your app, pass a function

@@ -9,6 +9,7 @@ export const Aside = styled.aside`
   align-items: center;
   padding-top: 20px;
   position: fixed;
+  z-index: 1000;
 
   span {
     width: 100%;
