@@ -26,11 +26,13 @@ const TableProduct: React.FC = () => {
   })
 
   const openModalUpProduct = (product: IProduct): void => {
+    setProductSelected(() => product)
+    console.log(product)
     setIsOpenUpProduct(!isOpenUpProduct)
   }
 
   const openModalDeleteProduct = (product: IProduct): void => {
-    setProductSelected(product)
+    setProductSelected(() => product)
     setIsOpenDelProduct(!isOpenDelProduct)
   }
 
@@ -105,7 +107,7 @@ const TableProduct: React.FC = () => {
 
         </tbody>
       </Table>
-      <ModalUpProduct isOpen={isOpenUpProduct} toggle={closeModalUpProduct} />
+      <ModalUpProduct isOpen={isOpenUpProduct} toggle={closeModalUpProduct} product={productSelected}/>
       <ModalDelProduct isOpen={isOpenDelProduct} toggle={closeModalDeleteProduct} product={productSelected} />
     </Div>
   )

@@ -1,6 +1,5 @@
 export interface ICategory {
   id: number
-  allowAttachments: boolean
   allowQuantityVariation: boolean
   description?: string
   hasShipping: boolean

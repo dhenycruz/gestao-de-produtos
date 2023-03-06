@@ -1,114 +1,172 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import {
-  Button, Modal, ModalHeader, ModalBody, ModalFooter,
-  Form, FormGroup, Label, Input, Row, Col
+  Button, Modal, ModalHeader, ModalBody,
+  FormGroup, Label, Row, Col, Input, ModalFooter
 } from 'reactstrap'
+import { GlobalConext } from '../../context/globalContext'
+import { useForm } from 'react-hook-form'
+import api from '../../services/api'
+import { type IProduct } from '../../interfaces/interfaces'
 
 interface Props {
   isOpen: boolean
   toggle: () => void
+  product: IProduct
 }
 
-const ModalUpProduct: React.FC<Props> = ({ isOpen, toggle }) => {
+const ModalUpProduct: React.FC<Props> = ({ isOpen, toggle, product }) => {
+  const { categoryData, setAlertOpen, setAlertColor, setAlertText } = useContext(GlobalConext)
+  // react hook form
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      name: product.name,
+      categoryId: product.categoryId,
+      description: product.description,
+      icmsTax: product.icmsTax,
+      ipiTax: product.ipiTax,
+      minPuchaseQuantity: product.minPuchaseQuantity,
+      isAvailable: product.isAvailable,
+      isWarehouse: product.isWarehouse
+    }
+  })
+
+  const [isAvailable, setIsAvailable] = useState(false)
+  const [isWarehouse, setIsWarehouse] = useState(false)
+
+  const handleAvailable = (): void => {
+    setIsAvailable(!isAvailable)
+  }
+
+  const handleWarehouse = (): void => {
+    setIsWarehouse(!isWarehouse)
+  }
+
+  const onSubmitProduct = handleSubmit((data) => {
+    data.isAvailable = isAvailable
+    data.isWarehouse = isWarehouse
+
+    void api.post('/Products', data)
+      .catch((_error) => {
+        setAlertColor('danger')
+        setAlertOpen(true)
+        setAlertText('Ops, algo deu errado.')
+      })
+      .then((_res) => {
+        setAlertColor('success')
+        setAlertOpen(true)
+        setAlertText('Produto foi adicionado com sucesso!')
+      })
+  })
+
   return (
     <Modal isOpen={isOpen} toggle={toggle} centered={true}>
       <ModalHeader toggle={toggle}>Editar Produto</ModalHeader>
       <ModalBody>
-        <Form>
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+        <form onSubmit={onSubmitProduct}>
           <Row>
             <Col>
               <FormGroup>
-                <Label for="exampleEmail">
+                <Label for="name">
                   Nome do Produto
                 </Label>
-                <Input
-                  id="exampleEmail"
-                  name="email"
+                <input
+                  className='form-control'
+                  {...register('name', {
+                    required: true
+                  })}
+                  aria-invalid={ (errors.name != null) ? 'true' : 'false' }
+                  id="name"
                   placeholder="nome do produto..."
-                  type="email"
+                  type="text"
                 />
+                {errors.name?.type === 'required' && <p className='text-danger'>O campo nome é obrigatório!</p>}
               </FormGroup>
             </Col>
             <Col md='4'>
               <FormGroup>
-                <Label for="exampleSelect">
+                <Label for="categoryId">
                   Categoria
                 </Label>
-                <Input
-                  id="exampleSelect"
-                  name="select"
-                  type="select"
+                <select
+                  id='categoryId'
+                  {...register('categoryId')}
+                  className='form-select'
                 >
-                  <option>
-                    1
-                  </option>
-                  <option>
-                    2
-                  </option>
-                  <option>
-                    3
-                  </option>
-                  <option>
-                    4
-                  </option>
-                  <option>
-                    5
-                  </option>
-                </Input>
+                  {categoryData.map((category, index) => (
+                    <option
+                      key={index}
+                      value={category.id}
+                      selected
+                    >
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
               </FormGroup>
             </Col>
           </Row>
           <Row>
             <Col>
               <FormGroup>
-                <Label for="exampleText">
+                <Label for="description">
                   Descrição
                 </Label>
-                <Input
-                  id="exampleText"
-                  name="text"
-                  type="textarea"
+                <textarea
+                  {...register('description', {
+                    required: true
+                  })}
+                  aria-invalid={ (errors.description != null) ? 'true' : 'false' }
+                  className='form-control'
+                  id="description"
                 />
+                {errors.description?.type === 'required' && <p className='text-danger'>O campo descrição é obrigatório!</p>}
               </FormGroup>
             </Col>
           </Row>
+          <hr />
           <Row>
             <Col md='3'>
               <FormGroup>
-                <Label for="exampleNumber">
-                  ICMS
+                <Label for="icms">
+                  ICMS (%)
                 </Label>
-                <Input
-                  id="exampleNumber"
-                  name="number"
-                  placeholder="number placeholder"
+                <input
+                  {...register('icmsTax')}
+                  id='icms'
+                  className='form-control'
+                  placeholder="0%"
                   type="number"
                   min='0'
+                  max='100'
                 />
               </FormGroup>
             </Col>
             <Col md='3'>
               <FormGroup>
-                <Label for="exampleNumber">
-                  IPI
+                <Label for="ipi">
+                  IPI (%)
                 </Label>
-                <Input
-                  id="exampleNumber"
-                  name="number"
-                  placeholder="number placeholder"
+                <input
+                  {...register('ipiTax')}
+                  id="ipi"
+                  className='form-control'
+                  placeholder="0%"
                   type="number"
                   min='0'
+                  max='100'
                 />
               </FormGroup>
             </Col>
             <Col>
               <FormGroup>
-                <Label for="exampleNumber">
-                Qtd mín. de compra
+                <Label for="minPuchaseQuantity">
+                  Qtd mín. de compra
                 </Label>
-                <Input
-                  id="exampleNumber"
-                  name="number"
+                <input
+                  {...register('minPuchaseQuantity')}
+                  className='form-control'
+                  id="minPuchaseQuantity"
                   placeholder="number placeholder"
                   type="number"
                   min='0'
@@ -116,10 +174,11 @@ const ModalUpProduct: React.FC<Props> = ({ isOpen, toggle }) => {
               </FormGroup>
             </Col>
           </Row>
+          <hr />
           <Row>
             <Col>
               <FormGroup switch>
-                <Input type="switch" role="switch" />
+                <Input type="switch" role="switch" checked={isWarehouse} onChange={handleWarehouse}/>
                 <Label check>Está disponível</Label>
               </FormGroup>
             </Col>
@@ -127,21 +186,22 @@ const ModalUpProduct: React.FC<Props> = ({ isOpen, toggle }) => {
           <Row>
             <Col>
               <FormGroup switch>
-                <Input type="switch" role="switch" />
+                <Input type="switch" role="switch" checked={isAvailable} onChange={handleAvailable} />
                 <Label check>É Armazém</Label>
               </FormGroup>
             </Col>
           </Row>
-        </Form>
+          <ModalFooter>
+            <Button
+              className='float-right'
+              color="primary"
+              type='submit'
+            >
+              Adicionar
+            </Button>
+          </ModalFooter>
+        </form>
       </ModalBody>
-      <ModalFooter>
-        <Button color="secondary" onClick={toggle}>
-          Cancelar
-        </Button>{' '}
-        <Button color="primary" onClick={toggle}>
-          Atualizar
-        </Button>
-      </ModalFooter>
     </Modal>
   )
 }

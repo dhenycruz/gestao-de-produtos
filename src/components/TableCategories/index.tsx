@@ -12,7 +12,6 @@ const TableCategory: React.FC = () => {
   const [isOpenDelCategorie, setIsOpenDelCategorie] = useState(false)
   const [categorySelected, setCategorySelected] = useState({
     id: 0,
-    allowAttachments: false,
     allowQuantityVariation: false,
     description: '',
     hasShipping: false,
@@ -25,11 +24,12 @@ const TableCategory: React.FC = () => {
   })
 
   const openModalUpCategorie = (category: ICategory): void => {
+    console.log(typeof setCategorySelected)
     setIsOpenUpCategorie(!isOpenUpCategorie)
   }
 
   const openModalDeleteCategorie = (category: ICategory): void => {
-    setCategorySelected(categorySelected)
+    // setCategorySelected(category)
     setIsOpenDelCategorie(!isOpenDelCategorie)
   }
 
@@ -101,7 +101,7 @@ const TableCategory: React.FC = () => {
 
         </tbody>
       </Table>
-      <ModalUpCategorie isOpen={isOpenUpCategorie} toggle={closeModalUpCategorie} />
+      <ModalUpCategorie isOpen={isOpenUpCategorie} toggle={closeModalUpCategorie} category={categorySelected} />
       <ModalDelCategorie isOpen={isOpenDelCategorie} toggle={closeModalDeleteCategorie} category={categorySelected} />
     </Div>
   )
