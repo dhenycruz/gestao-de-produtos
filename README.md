@@ -38,6 +38,10 @@ De que coisas você precisa para instalar o software e como instalá-lo?
 
 Assim a nossa aplicação estará rodando localmente
 
+<img src='public/gestao-de-produtos.png' alt="print app" width="500" />
+<img src='public/gestao-de-produtos2.png' alt="print app" width="500" />
+<img src='public/gestao-de-produtos3.png' alt="print app" width="500" />
+
 ## 🛠️ Construído com
   - REACT.JS
   - AXIOS
