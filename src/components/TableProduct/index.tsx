@@ -13,7 +13,7 @@ const TableProduct: React.FC = () => {
   } = useContext(GlobalConext)
   const [isOpenUpProduct, setIsOpenUpProduct] = useState(false)
   const [isOpenDelProduct, setIsOpenDelProduct] = useState(false)
-  const [productSelected, setProductSelected] = useState({
+  const [productSelected, setProductSelected] = useState<IProduct>({
     id: 0,
     categoryId: 0,
     description: '',
@@ -27,7 +27,6 @@ const TableProduct: React.FC = () => {
 
   const openModalUpProduct = (product: IProduct): void => {
     setProductSelected(() => product)
-    console.log(product)
     setIsOpenUpProduct(!isOpenUpProduct)
   }
 
@@ -62,9 +61,6 @@ const TableProduct: React.FC = () => {
             <th>
               Produto
             </th>
-            {/* <th>
-              Descrição
-            </th> */}
             <th>
               Categoria
             </th>

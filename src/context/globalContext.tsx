@@ -4,9 +4,9 @@ import api from '../services/api'
 
 interface IGlobalContext {
   productTotal: number
-  // setProductTotal: Dispatch<SetStateAction<number>>
+  setProductTotal: Dispatch<SetStateAction<number>>
   categoryTotal: number
-  // setCategoryTotal: Dispatch<SetStateAction<number>>
+  setCategoryTotal: Dispatch<SetStateAction<number>>
   productData: IProduct[]
   setProductData: Dispatch<SetStateAction<never[]>>
   categoryData: ICategory[]
@@ -70,8 +70,10 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }): Rea
       categoryTotal,
       productData,
       setProductData,
+      setProductTotal,
       categoryData,
       setCategoryData,
+      setCategoryTotal,
       alertColor,
       setAlertColor,
       alertText,

@@ -10,7 +10,7 @@ const TableCategory: React.FC = () => {
   const { categoryData, alertOpen, alertColor, alertText } = useContext(GlobalConext)
   const [isOpenUpCategorie, setIsOpenUpCategorie] = useState(false)
   const [isOpenDelCategorie, setIsOpenDelCategorie] = useState(false)
-  const [categorySelected, setCategorySelected] = useState({
+  const [categorySelected, setCategorySelected] = useState<ICategory>({
     id: 0,
     allowQuantityVariation: false,
     description: '',
@@ -24,12 +24,12 @@ const TableCategory: React.FC = () => {
   })
 
   const openModalUpCategorie = (category: ICategory): void => {
-    console.log(typeof setCategorySelected)
+    setCategorySelected(category)
     setIsOpenUpCategorie(!isOpenUpCategorie)
   }
 
   const openModalDeleteCategorie = (category: ICategory): void => {
-    // setCategorySelected(category)
+    setCategorySelected(category)
     setIsOpenDelCategorie(!isOpenDelCategorie)
   }
 

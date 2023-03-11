@@ -11,25 +11,30 @@ interface Props {
 }
 
 const ModalDelProduct: React.FC<Props> = ({ isOpen, toggle, product }) => {
-  const { setAlertOpen, setAlertColor, setAlertText } = useContext(GlobalConext)
+  const { setAlertOpen, setProductData, setProductTotal, setAlertColor, setAlertText } = useContext(GlobalConext)
 
   const DeleteProduct = (id: number): void => {
     void api.delete(`/Product/${id}`)
+      .then((_res) => {
+        setAlertColor('success')
+        setAlertOpen(true)
+        setAlertText('Produto foi deletado com sucesso!')
+        toggle()
+        void api.get('/Product')
+          .then(({ data }) => {
+            setProductData(data)
+            setProductTotal(data.length)
+          })
+      })
       .catch((_error) => {
         setAlertColor('danger')
         setAlertOpen(true)
         setAlertText('Ops, algo deu errado.')
         toggle()
       })
-      .then((_res) => {
-        setAlertColor('success')
-        setAlertOpen(true)
-        setAlertText('Produto foi deletado com sucesso!')
-        toggle()
-      })
 
     setTimeout(
-      () => { setAlertOpen(false) }, 3000
+      () => { setAlertOpen(false) }, 5000
     )
   }
 

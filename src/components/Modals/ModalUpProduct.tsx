@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   Button, Modal, ModalHeader, ModalBody,
-  FormGroup, Label, Row, Col, Input, ModalFooter
+  FormGroup, Label, Row, Col, ModalFooter
 } from 'reactstrap'
 import { GlobalConext } from '../../context/globalContext'
 import { useForm } from 'react-hook-form'
@@ -15,54 +15,42 @@ interface Props {
 }
 
 const ModalUpProduct: React.FC<Props> = ({ isOpen, toggle, product }) => {
-  const { categoryData, setAlertOpen, setAlertColor, setAlertText } = useContext(GlobalConext)
+  const { categoryData, setProductData, setProductTotal, setAlertOpen, setAlertColor, setAlertText } = useContext(GlobalConext)
+
   // react hook form
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    defaultValues: {
-      name: product.name,
-      categoryId: product.categoryId,
-      description: product.description,
-      icmsTax: product.icmsTax,
-      ipiTax: product.ipiTax,
-      minPuchaseQuantity: product.minPuchaseQuantity,
-      isAvailable: product.isAvailable,
-      isWarehouse: product.isWarehouse
-    }
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    mode: 'onBlur'
   })
 
-  const [isAvailable, setIsAvailable] = useState(false)
-  const [isWarehouse, setIsWarehouse] = useState(false)
-
-  const handleAvailable = (): void => {
-    setIsAvailable(!isAvailable)
-  }
-
-  const handleWarehouse = (): void => {
-    setIsWarehouse(!isWarehouse)
-  }
-
   const onSubmitProduct = handleSubmit((data) => {
-    data.isAvailable = isAvailable
-    data.isWarehouse = isWarehouse
+    void api.put(`/Product/${product.id}`, data)
+      .then((_res) => {
+        setAlertColor('success')
+        setAlertOpen(true)
+        setAlertText('Produto foi atualizado com sucesso!')
+        toggle()
 
-    void api.post('/Products', data)
+        void api.get('/Product')
+          .then(({ data }) => {
+            setProductData(data)
+            setProductTotal(data.length)
+          })
+      })
       .catch((_error) => {
         setAlertColor('danger')
         setAlertOpen(true)
         setAlertText('Ops, algo deu errado.')
         toggle()
       })
-      .then((_res) => {
-        setAlertColor('success')
-        setAlertOpen(true)
-        setAlertText('Produto foi adicionado com sucesso!')
-        toggle()
-      })
 
     setTimeout(
-      () => { setAlertOpen(false) }, 3000
+      () => { setAlertOpen(false) }, 5000
     )
   })
+
+  useEffect(() => {
+    reset(product)
+  }, [product])
 
   return (
     <Modal isOpen={isOpen} toggle={toggle} centered={true}>
@@ -103,7 +91,6 @@ const ModalUpProduct: React.FC<Props> = ({ isOpen, toggle, product }) => {
                     <option
                       key={index}
                       value={category.id}
-                      selected
                     >
                       {category.name}
                     </option>
@@ -184,7 +171,11 @@ const ModalUpProduct: React.FC<Props> = ({ isOpen, toggle, product }) => {
           <Row>
             <Col>
               <FormGroup switch>
-                <Input type="switch" role="switch" checked={isWarehouse} onChange={handleWarehouse}/>
+                <input
+                  type="checkbox"
+                  {...register('isAvailable')}
+                  className='form-check-input'
+                />
                 <Label check>Está disponível</Label>
               </FormGroup>
             </Col>
@@ -192,7 +183,11 @@ const ModalUpProduct: React.FC<Props> = ({ isOpen, toggle, product }) => {
           <Row>
             <Col>
               <FormGroup switch>
-                <Input type="switch" role="switch" checked={isAvailable} onChange={handleAvailable} />
+                <input
+                  type="checkbox"
+                  {...register('isWarehouse')}
+                  className='form-check-input'
+                />
                 <Label check>É Armazém</Label>
               </FormGroup>
             </Col>
@@ -203,7 +198,7 @@ const ModalUpProduct: React.FC<Props> = ({ isOpen, toggle, product }) => {
               color="primary"
               type='submit'
             >
-              Adicionar
+              Salvar
             </Button>
           </ModalFooter>
         </form>

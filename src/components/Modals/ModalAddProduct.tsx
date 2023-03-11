@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import {
   Button, Modal, ModalHeader, ModalBody,
-  FormGroup, Label, Row, Col, Input, ModalFooter
+  FormGroup, Label, Row, Col, ModalFooter
 } from 'reactstrap'
 import { GlobalConext } from '../../context/globalContext'
 import { useForm } from 'react-hook-form'
@@ -13,49 +13,31 @@ interface Props {
 }
 
 const ModalAddProduct: React.FC<Props> = ({ isOpen, toggle }) => {
-  const { categoryData, setAlertOpen, setAlertColor, setAlertText } = useContext(GlobalConext)
+  const { categoryData, setAlertOpen, setAlertColor, setAlertText, setProductData, setProductTotal } = useContext(GlobalConext)
   // react hook form
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    defaultValues: {
-      name: '',
-      categoryId: 1,
-      description: '',
-      icmsTax: 0,
-      ipiTax: 0,
-      minPuchaseQuantity: 0,
-      isAvailable: false,
-      isWarehouse: false
-    }
-  })
-
-  const [isAvailable, setIsAvailable] = useState(false)
-  const [isWarehouse, setIsWarehouse] = useState(false)
-
-  const handleAvailable = (): void => {
-    setIsAvailable(!isAvailable)
-  }
-
-  const handleWarehouse = (): void => {
-    setIsWarehouse(!isWarehouse)
-  }
+  const { register, handleSubmit, formState: { errors } } = useForm()
 
   const onSubmitProduct = handleSubmit((data) => {
-    data.isAvailable = isAvailable
-    data.isWarehouse = isWarehouse
-
+    console.log(data)
     void api.post('/Product', data)
-      .catch((error) => {
-        console.log(error)
-        setAlertColor('danger')
-        setAlertOpen(true)
-        setAlertText('Ops, algo deu errado.')
-        toggle()
-      })
       .then((res) => {
         console.log(res)
         setAlertColor('success')
         setAlertOpen(true)
         setAlertText('Produto foi adicionado com sucesso!')
+        toggle()
+
+        void api.get('/Product')
+          .then(({ data }) => {
+            setProductData(data)
+            setProductTotal(data.length)
+          })
+      })
+      .catch((error) => {
+        console.log(error)
+        setAlertColor('danger')
+        setAlertOpen(true)
+        setAlertText('Ops, algo deu errado.')
         toggle()
       })
 
@@ -98,12 +80,12 @@ const ModalAddProduct: React.FC<Props> = ({ isOpen, toggle }) => {
                   id='categoryId'
                   {...register('categoryId')}
                   className='form-select'
+                  defaultValue={1}
                 >
                   {categoryData.map((category, index) => (
                     <option
                       key={index}
                       value={category.id}
-                      selected
                     >
                       {category.name}
                     </option>
@@ -184,7 +166,11 @@ const ModalAddProduct: React.FC<Props> = ({ isOpen, toggle }) => {
           <Row>
             <Col>
               <FormGroup switch>
-                <Input type="switch" role="switch" checked={isWarehouse} onChange={handleWarehouse}/>
+                <input
+                  type="checkbox"
+                  {...register('isAvailable')}
+                  className='form-check-input'
+                />
                 <Label check>Está disponível</Label>
               </FormGroup>
             </Col>
@@ -192,7 +178,11 @@ const ModalAddProduct: React.FC<Props> = ({ isOpen, toggle }) => {
           <Row>
             <Col>
               <FormGroup switch>
-                <Input type="switch" role="switch" checked={isAvailable} onChange={handleAvailable} />
+                <input
+                  type="checkbox"
+                  {...register('isWarehouse')}
+                  className='form-check-input'
+                />
                 <Label check>É Armazém</Label>
               </FormGroup>
             </Col>

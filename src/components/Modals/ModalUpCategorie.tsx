@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react'
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import React, { useEffect, useContext } from 'react'
 import {
   Button, Modal, ModalHeader, ModalBody,
-  FormGroup, Label, Input, Row, Col, ModalFooter
+  FormGroup, Label, Row, Col, ModalFooter
 } from 'reactstrap'
 import { useForm } from 'react-hook-form'
 import api from '../../services/api'
@@ -15,75 +16,51 @@ interface Props {
 }
 
 const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
-  const { setAlertOpen, setAlertColor, setAlertText } = useContext(GlobalConext)
-  const [allowQuantityVariation, setAllowQuantityVariation] = useState(false)
-
-  const handleallowQuantityVariation = (): void => {
-    setAllowQuantityVariation(!allowQuantityVariation)
-  }
-
-  const [allowValueVariation, setAllowValueVariation] = useState(false)
-
-  const handleAllowValueVariation = (): void => {
-    setAllowValueVariation(!allowValueVariation)
-  }
-
-  const [hasShipping, setHasShipping] = useState(false)
-
-  const handleHasShipping = (): void => {
-    setHasShipping(!hasShipping)
-  }
-
-  const [validateClient, setValidateClient] = useState(false)
-
-  const handleValidateClient = (): void => {
-    setValidateClient(!validateClient)
-  }
-
-  const [limitRequestsPerMonth, setLimitRequestsPerMonth] = useState(false)
-
-  const handleLimitRequestsPerMonth = (): void => {
-    setLimitRequestsPerMonth(!limitRequestsPerMonth)
-  }
-
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    defaultValues: {
-      allowQuantityVariation: category.allowQuantityVariation,
-      description: category.description,
-      hasShipping: category.hasShipping,
-      limitRequest: category.limitRequest,
-      limitRequestsPerMonth: category.limitRequestsPerMonth,
-      name: category.name,
-      validateClient: category.validateClient,
-      valueVariation: category.valueVariation,
-      allowValueVariation: category.allowValueVariation
-    }
+  const { setAlertOpen, setAlertColor, setAlertText, setCategoryData, setCategoryTotal } = useContext(GlobalConext)
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm({
+    mode: 'onBlur'
   })
 
-  const onSubmitCategory = handleSubmit((data) => {
-    data.allowQuantityVariation = allowQuantityVariation
-    data.allowValueVariation = allowValueVariation
-    data.hasShipping = hasShipping
-    data.validateClient = validateClient
+  const watchAllowValueVariation = watch('allowValueVariation')
+  const watchLimitRequestsPerMonth = watch('limitRequestsPerMonth')
 
-    void api.post('/ProductsCategory', data)
+  const onSubmitCategory = handleSubmit((data) => {
+    void api.put(`/ProductCategory/${category.id}`, data)
+      .then((_res) => {
+        setAlertColor('success')
+        setAlertOpen(true)
+        setAlertText('Categoria foi atualizada com sucesso!')
+        toggle()
+
+        void api.get('/ProductCategory')
+          .then(({ data }) => {
+            setCategoryData(data)
+            setCategoryTotal(data.length)
+          })
+      })
       .catch((_error) => {
         setAlertColor('danger')
         setAlertOpen(true)
         setAlertText('Ops, algo deu errado.')
         toggle()
       })
-      .then((_res) => {
-        setAlertColor('success')
-        setAlertOpen(true)
-        setAlertText('Categoria foi adicionada com sucesso!')
-        toggle()
-      })
 
     setTimeout(
-      () => { setAlertOpen(false) }, 3000
+      () => { setAlertOpen(false) }, 5000
     )
   })
+
+  useEffect(() => {
+    if (!watchAllowValueVariation) setValue('allowValueVariation', 0)
+  }, [watchAllowValueVariation])
+
+  useEffect(() => {
+    if (!watchLimitRequestsPerMonth) setValue('limitRequest', 0)
+  }, [watchLimitRequestsPerMonth])
+
+  useEffect(() => {
+    reset(category)
+  }, [category])
 
   return (
     <Modal isOpen={isOpen} toggle={toggle} centered={true}>
@@ -117,7 +94,9 @@ const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
                   Descrição
                 </Label>
                 <textarea
-                  {...register('description')}
+                  {...register('description', {
+                    required: true
+                  })}
                   aria-invalid={ (errors.description != null) ? 'true' : 'false' }
                   className='form-control'
                   id="description"
@@ -129,7 +108,11 @@ const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
           <Row>
             <Col>
               <FormGroup switch>
-                <Input type="switch" role="switch" checked={allowQuantityVariation} onChange={handleallowQuantityVariation} />
+                <input
+                  type="checkbox"
+                  {...register('allowQuantityVariation')}
+                  className='form-check-input'
+                />
                 <Label check>Permitir Variação de Quantidade</Label>
               </FormGroup>
             </Col>
@@ -137,7 +120,11 @@ const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
           <Row>
             <Col>
               <FormGroup switch>
-                <Input type="switch" role="switch" checked={hasShipping} onChange={handleHasShipping} />
+                <input
+                  type='checkbox'
+                  {...register('hasShipping')}
+                  className='form-check-input'
+                />
                 <Label check>Frete</Label>
               </FormGroup>
             </Col>
@@ -145,7 +132,11 @@ const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
           <Row>
             <Col>
               <FormGroup switch>
-                <Input type="switch" role="switch" checked={validateClient} onChange={handleValidateClient} />
+                <input
+                  type='checkbox'
+                  {...register('validateClient')}
+                  className='form-check-input'
+                />
                 <Label check>Validar Cliente</Label>
               </FormGroup>
             </Col>
@@ -154,7 +145,11 @@ const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
           <Row>
             <Col>
               <FormGroup switch>
-                <Input type="switch" role="switch" checked={allowValueVariation} onChange={handleAllowValueVariation} />
+                <input
+                  type="checkbox"
+                  {...register('allowValueVariation')}
+                  className='form-check-input'
+                />
                 <Label check>Permitir Variação de Valor</Label>
               </FormGroup>
             </Col>
@@ -164,13 +159,13 @@ const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
                   Valor da Variação
                 </Label>
                 <input
-                  {...register('allowValueVariation')}
-                  id="allowValueVariation"
+                  {...register('valueVariation')}
+                  id="valueVariation"
                   placeholder="Valor da Variação"
                   type="number"
                   min='0'
                   className='form-control'
-                  disabled={!allowValueVariation}
+                  disabled={!watchAllowValueVariation}
                 />
               </FormGroup>
             </Col>
@@ -179,7 +174,11 @@ const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
           <Row>
             <Col>
               <FormGroup switch>
-                <Input type="switch" role="switch" checked={limitRequestsPerMonth} onChange={handleLimitRequestsPerMonth} />
+                <input
+                  type="checkbox"
+                  {...register('limitRequestsPerMonth')}
+                  className='form-check-input'
+                />
                 <Label check>Limite de Solicitações/mês</Label>
               </FormGroup>
             </Col>
@@ -194,7 +193,7 @@ const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
                   placeholder="Valor do Limite"
                   type="number"
                   min='0'
-                  disabled={!limitRequestsPerMonth}
+                  disabled={!watchLimitRequestsPerMonth}
                   className='form-control'
                 />
               </FormGroup>
@@ -206,7 +205,7 @@ const ModalUpCategorie: React.FC<Props> = ({ isOpen, toggle, category }) => {
               color="primary"
               type='submit'
             >
-              Adicionar
+              Salvar
             </Button>
           </ModalFooter>
         </form>
